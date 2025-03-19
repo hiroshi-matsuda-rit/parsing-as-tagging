@@ -1,4 +1,5 @@
 import os
+import re
 import tempfile
 from nltk.corpus.reader import DependencyCorpusReader
 from nltk.corpus.reader.util import *
@@ -302,7 +303,8 @@ if __name__ == "__main__":
         # elif language in ["bg", "ca","cs","de","en","es","fr","it","nl","no","ro","ru"]:
         else:
             assert language in LANG_TO_DIR, f"unknown language: {language}"
-            path = os.path.dirname(repo_directory)+f"/ctb_ptb_ud22/ud2.2/{LANG_TO_DIR[language]}"
+            # path = os.path.dirname(repo_directory)+f"/ctb_ptb_ud22/ud2.2/{LANG_TO_DIR[language]}"
+            path = os.path.dirname(repo_directory)+f"/ud/{LANG_TO_DIR[language]}"
             paths = []
             groups = re.match(r'(\w+)_\w+-ud-(\w+)\.conllu', os.path.split(path)[-1])
 
