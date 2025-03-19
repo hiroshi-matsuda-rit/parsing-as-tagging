@@ -311,7 +311,8 @@ if __name__ == "__main__":
             for split in ["train", "dev", "test"]:
                 conll_path = path.format(split=split)
                 command = f"cd ../malt/maltparser-1.9.2/; java -jar maltparser-1.9.2.jar -c {language}_{split} -m proj" \
-                        f" -i {conll_path} -o {conll_path}.proj -pp head"
+                        f" -i {conll_path} -o {conll_path}.proj -pp head &> log.malt"
+                print("Executing:", command)
                 os.system(command)
                 paths.append(conll_path + ".proj")
 
