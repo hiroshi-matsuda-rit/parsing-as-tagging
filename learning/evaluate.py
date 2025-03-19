@@ -244,8 +244,8 @@ def dependency_eval(
         save_triplets(pred_triple_data, pred_temp_out)
 
         for filename, tgt_filename in zip([gold_temp_out, pred_temp_out], [gold_temp_in, pred_temp_in]):
-            command = f"cd ./malt/maltparser-1.9.2/; java -jar maltparser-1.9.2.jar -c {language}_{split} -m deproj" \
-                    f" -i {filename} -o {tgt_filename} ; cd ../../"
+            command = f"cd ../malt/maltparser-1.9.2/; java -jar maltparser-1.9.2.jar -c {language}_{split} -m deproj" \
+                    f" -i {filename} -o {tgt_filename} ; cd -"
             os.system(command)
 
         loaded_gold_dev_triples = load_triplets(gold_temp_in)
@@ -520,8 +520,8 @@ def dependency_decoding(
         save_triplets(pred_triple_data, pred_temp_out)
 
         for filename, tgt_filename in zip([gold_temp_out, pred_temp_out], [gold_temp_in, pred_temp_in]):
-            command = f"cd ./malt/maltparser-1.9.2/; java -jar maltparser-1.9.2.jar -c {language}_{split} -m deproj" \
-                    f" -i {filename} -o {tgt_filename} ; cd ../../"
+            command = f"cd ../malt/maltparser-1.9.2/; java -jar maltparser-1.9.2.jar -c {language}_{split} -m deproj" \
+                    f" -i {filename} -o {tgt_filename} ; cd -"
             os.system(command)
 
         loaded_gold_dev_triples = load_triplets(gold_temp_in)
