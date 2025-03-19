@@ -6,6 +6,7 @@ from nltk.tree import Tree
 from tqdm import tqdm as tq
 import sys
 
+'''
 LANG_TO_DIR = {
     "bg": "/UD_Bulgarian-BTB/bg_btb-ud-{split}.conllu",
     "ca": "/UD_Catalan-AnCora/ca_ancora-ud-{split}.conllu",
@@ -19,6 +20,17 @@ LANG_TO_DIR = {
     "no": "/UD_Norwegian-Bokmaal/no_bokmaal-ud-{split}.conllu",
     "ro": "/UD_Romanian-RRT/ro_rrt-ud-{split}.conllu",
     "ru": "/UD_Russian-SynTagRus/ru_syntagrus-ud-{split}.conllu",
+}
+'''
+LANG_TO_DIR = {
+    "en": "/en_ewt-r2.15/en_ewt-ud-{split}.conllu",
+    "ja": "/ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
+    "zh": "/zh_gsdsimp-r2.15/zh_gsdsimp-ud-{split}.conllu",
+    "ko": "/ko_gsd-r2.15/ko_gsd-ud-{split}.conllu",
+    "ar": "/ar_padt-r2.15/ar_padt-ud-{split}.conllu",
+    "fr": "/fr_gsd-r2.15/fr_gsd-ud-{split}.conllu",
+    "de": "/de_gsd-r2.15/de_gsd-ud-{split}.conllu",
+    "sl": "/sl_ssj-r2.15-r2.15/sl_ssj-ud-{split}.conllu",
 }
 
 
@@ -278,8 +290,8 @@ if __name__ == "__main__":
     for language in [
         "English",  # PTB
         "Chinese",  # CTB
-        "bg","ca","cs","de","en","es","fr","it","nl","no","ro","ru" # UD2.2
-    ]:
+        #"bg","ca","cs","de","en","es","fr","it","nl","no","ro","ru" # UD2.2
+    ] + list(LANG_TO_DIR.keys()):
         print(f"Processing {language}...")
         if language == "English":
             path = os.path.dirname(repo_directory) + "/ptb/ptb_{split}_3.3.0.sd.clean"
@@ -287,7 +299,9 @@ if __name__ == "__main__":
         elif language == "Chinese":
             path = os.path.dirname(repo_directory) + "/ctb/{split}.ctb.conll"
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
-        elif language in ["bg", "ca","cs","de","en","es","fr","it","nl","no","ro","ru"]:
+        # elif language in ["bg", "ca","cs","de","en","es","fr","it","nl","no","ro","ru"]:
+        else:
+            assert language in LANG_TO_DIR, f"unknown language: {language}"
             path = os.path.dirname(repo_directory)+f"/ctb_ptb_ud22/ud2.2/{LANG_TO_DIR[language]}"
             paths = []
             groups = re.match(r'(\w+)_\w+-ud-(\w+)\.conllu', os.path.split(path)[-1])
