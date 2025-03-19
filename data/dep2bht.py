@@ -31,7 +31,7 @@ LANG_TO_DIR = {
     "ar": "/ar_padt-r2.15/ar_padt-ud-{split}.conllu",
     "fr": "/fr_gsd-r2.15/fr_gsd-ud-{split}.conllu",
     "de": "/de_gsd-r2.15/de_gsd-ud-{split}.conllu",
-    "sl": "/sl_ssj-r2.15-r2.15/sl_ssj-ud-{split}.conllu",
+    "sl": "/sl_ssj-r2.15/sl_ssj-ud-{split}.conllu",
 }
 
 
