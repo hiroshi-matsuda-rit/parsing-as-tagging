@@ -289,8 +289,8 @@ if __name__ == "__main__":
         exit(0)
 
     for language in [
-        "English",  # PTB
-        "Chinese",  # CTB
+        #"English",  # PTB
+        #"Chinese",  # CTB
         #"bg","ca","cs","de","en","es","fr","it","nl","no","ro","ru" # UD2.2
     ] + list(LANG_TO_DIR.keys()):
         print(f"Processing {language}...")
