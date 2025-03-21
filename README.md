@@ -1,4 +1,4 @@
-# Procedures to construct reproducing experiment environment
+# Procedure for reproducing experiments
 
 ```bash
 git clone https://github.com/hiroshi-matsuda-rit/parsing-as-tagging.git
