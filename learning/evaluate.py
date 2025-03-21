@@ -273,6 +273,18 @@ def dependency_eval(
         gold_dev_triples_unlabeled, predicted_dev_triples_unlabeled, average='micro'
     )
 
+    """
+    # MCP
+    with open(os.path.join(output_path, 'gold_dev_triples.txt'), 'w') as fw:
+        fw.write('\n'.join(gold_dev_triples))
+    with open(os.path.join(output_path, 'predicted_dev_triples.txt'), 'w') as fw:
+        fw.write('\n'.join(predicted_dev_triples))
+    with open(os.path.join(output_path, 'gold_dev_triples_unlabeled.txt'), 'w') as fw:
+        fw.write('\n'.join(gold_dev_triples_unlabeled))
+    with open(os.path.join(output_path, 'predicted_dev_triples_unlabeled.txt'), 'w') as fw:
+        fw.write('\n'.join(predicted_dev_triples_unlabeled))"
+    """    
+
     return (ParseMetrics(las_recall, las_precision, las_fscore, complete_match=1),
             ParseMetrics(uas_recall, uas_precision, uas_fscore, complete_match=1))
 
