@@ -296,7 +296,7 @@ if __name__ == "__main__":
         print(f"Processing {language}...")
         if language == "English":
             # path = os.path.dirname(repo_directory) + "/ptb/ptb_{split}_3.3.0.sd.clean"
-            path = os.path.dirname(repo_directory) + "/treebanks/ptb/ptb.{split}.conllu",
+            path = os.path.dirname(repo_directory) + "/treebanks/ptb/ptb.{split}.conllu"
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         elif language == "Chinese":
             # path = os.path.dirname(repo_directory) + "/ctb/{split}.ctb.conll"
