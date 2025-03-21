@@ -295,10 +295,12 @@ if __name__ == "__main__":
     ] + list(LANG_TO_DIR.keys()):
         print(f"Processing {language}...")
         if language == "English":
-            path = os.path.dirname(repo_directory) + "/ptb/ptb_{split}_3.3.0.sd.clean"
+            # path = os.path.dirname(repo_directory) + "/ptb/ptb_{split}_3.3.0.sd.clean"
+            path = os.path.dirname(repo_directory) + "/ptb/ptb.{split}.conllu",
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         elif language == "Chinese":
-            path = os.path.dirname(repo_directory) + "/ctb/{split}.ctb.conll"
+            # path = os.path.dirname(repo_directory) + "/ctb/{split}.ctb.conll"
+            path = os.path.dirname(repo_directory) + "/ctb5.1/ctb5.1.{split}.conllu",
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         # elif language in ["bg", "ca","cs","de","en","es","fr","it","nl","no","ro","ru"]:
         else:
