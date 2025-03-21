@@ -51,14 +51,14 @@ CUDA_VISIBLE_DEVICES=5 python run.py train --lang fr --max-depth 6 --tagger hexa
 CUDA_VISIBLE_DEVICES=6 python run.py train --lang de --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log6 &
 CUDA_VISIBLE_DEVICES=7 python run.py train --lang sl --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log7 &
 
-CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang en --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name en-hexa-bert-1e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log0 &
-CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang ja --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ja-hexa-bert-1e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log1 &
-CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang zh --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name zh-hexa-bert-1e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log2 &
-CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang ko --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ko-hexa-bert-1e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log3 &
-CUDA_VISIBLE_DEVICES=4 python run.py evaluate --lang ar --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ar-hexa-bert-1e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log4 &
-CUDA_VISIBLE_DEVICES=5 python run.py evaluate --lang fr --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name fr-hexa-bert-1e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log5 &
-CUDA_VISIBLE_DEVICES=6 python run.py evaluate --lang de --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name de-hexa-bert-1e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log6 &
-CUDA_VISIBLE_DEVICES=7 python run.py evaluate --lang sl --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name sl-hexa-bert-1e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log7 &
+CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang en --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name en-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log0 &
+CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang ja --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ja-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log1 &
+CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang zh --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name zh-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log2 &
+CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang ko --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ko-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log3 &
+CUDA_VISIBLE_DEVICES=4 python run.py evaluate --lang ar --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ar-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log4 &
+CUDA_VISIBLE_DEVICES=5 python run.py evaluate --lang fr --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name fr-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log5 &
+CUDA_VISIBLE_DEVICES=6 python run.py evaluate --lang de --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name de-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log6 &
+CUDA_VISIBLE_DEVICES=7 python run.py evaluate --lang sl --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name sl-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log7 &
 ```
 
 ## Setting Up The Environment
