@@ -300,7 +300,7 @@ if __name__ == "__main__":
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         elif language == "Chinese":
             # path = os.path.dirname(repo_directory) + "/ctb/{split}.ctb.conll"
-            path = os.path.dirname(repo_directory) + "/treebanks/ctb5.1/ctb5.1.{split}.conllu",
+            path = os.path.dirname(repo_directory) + "/treebanks/ctb5.1/ctb5.1.{split}.conllu"
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         # elif language in ["bg", "ca","cs","de","en","es","fr","it","nl","no","ro","ru"]:
         else:
