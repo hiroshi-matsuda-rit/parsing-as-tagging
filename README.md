@@ -1,14 +1,4 @@
-# Parsing as Tagging
-<p align="center">
-  <img src="https://github.com/rycolab/parsing-as-tagging/blob/main/header.jpg" width=400>
-  <img src="https://github.com/rycolab/parsing-as-tagging/blob/main/header-hexa.png" width=400>
-</p>
-This repository contains code for training and evaluation of two papers:
-
-- On Parsing as Tagging 
-- Hexatagging: Projective Dependency Parsing as Tagging
-
-## Procedures to construct reproducing experiment environment
+# Procedures to construct reproducing experiment environment
 
 ```bash
 git clone https://github.com/hiroshi-matsuda-rit/parsing-as-tagging.git
@@ -25,54 +15,58 @@ curl -o maltparser-1.9.2.tar.gz http://maltparser.org/dist/maltparser-1.9.2.tar.
 tar zxf maltparser-1.9.2.tar.gz
 rm maltparser-1.9.2.tar.gz
 cd -
-```
 
-### For PTB and CTB
+ln -sf /home/sagyou/llmpp/treebanks data/
+ln -sf /home/sagyou/llmpp/ud data/
 
-```bash
-ln -sf /home/sagyou/llmpp/treebanks ./
-
-# assign path of PTB/CTB to `en`/`zh` respectively in LANG_TO_DIR, change the string `ud` to `treebanks` in the __main__ `for` loop.
-python data/dep2bht.py
-
-for lang in en zh; do python run.py vocab --lang $lang --tagger hexa ; done
-
-CUDA_VISIBLE_DEVICES=6 python run.py train --lang en --max-depth 6 --tagger hexa --model bert --epochs 50 --batch-size 32 --lr 2e-5 --model-path xlnet-large-cased --output-path ./checkpoints/ --use-tensorboard False &> log.ptb & 
-CUDA_VISIBLE_DEVICES=7 python run.py train --lang zh --max-depth 6 --tagger hexa --model bert --epochs 50 --batch-size 32 --lr 2e-5 --model-path hfl/chinese-xlnet-mid --output-path ./checkpoints/ --use-tensorboard False &> log.ctb &
-
-CUDA_VISIBLE_DEVICES=6 python run.py evaluate --lang en --max-depth 10 --tagger hexa --bert-model-path xlnet-large-cased --model-name en-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log.ptb &
-CUDA_VISIBLE_DEVICES=7 python run.py evaluate --lang zh --max-depth 10 --tagger hexa --bert-model-path hfl/chinese-xlnet-mid --model-name zh-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log.ctb & 
-```
-
-### For UD datasets
-
-```bash
-ln -sf /home/sagyou/llmpp/ud ./
-
-# after editing LANG_TO_DIR setting and the __main__ `for` loop entries in `data/dep2bht.py`
 python data/dep2bht.py
 
 # ignore logs of bitsandbytes bug report info
-for lang in en ja zh ko ar fr de sl ; do python run.py vocab --lang $lang --tagger hexa ; done
+for lang in English Chinese en ja zh ko ar fr de sl ; do python run.py vocab --lang $lang --tagger hexa ; done
 
-CUDA_VISIBLE_DEVICES=0 python run.py train --lang en --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log0 &
-CUDA_VISIBLE_DEVICES=1 python run.py train --lang ja --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log1 &
-CUDA_VISIBLE_DEVICES=2 python run.py train --lang zh --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log2 &
-CUDA_VISIBLE_DEVICES=3 python run.py train --lang ko --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log3 &
-CUDA_VISIBLE_DEVICES=4 python run.py train --lang ar --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log4 &
-CUDA_VISIBLE_DEVICES=5 python run.py train --lang fr --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log5 &
-CUDA_VISIBLE_DEVICES=6 python run.py train --lang de --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log6 &
-CUDA_VISIBLE_DEVICES=7 python run.py train --lang sl --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log7 &
+CUDA_VISIBLE_DEVICES=0 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path xlnet-large-cased --output-path ./checkpoints.xlnet/ --use-tensorboard False &> log.ptb-xlnet &
+CUDA_VISIBLE_DEVICES=1 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log.ptb-bert &
+CUDA_VISIBLE_DEVICES=2 python run.py train --lang Chinese --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path hfl/chinese-xlnet-mid --output-path ./checkpoints.xlnet/ --use-tensorboard False &> log.ctb-xlnet &
+CUDA_VISIBLE_DEVICES=3 python run.py train --lang Chinese --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log.ctb-bert &
+wait
+CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang English --max-depth 10 --tagger hexa --bert-model-path xlnet-large-cased --model-name English-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet/ &>> log.ptb-xlnet &
+CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang English --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name English-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log.ptb-bert &
+CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang Chinese --max-depth 10 --tagger hexa --bert-model-path hfl/chinese-xlnet-mid --model-name Chinese-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet/ &>> log.ctb-xlnet &
+CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang Chinese --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name Chinese-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log.ctb-bert &
 
-CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang en --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name en-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log0 &
-CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang ja --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ja-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log1 &
-CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang zh --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name zh-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log2 &
-CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang ko --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ko-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log3 &
-CUDA_VISIBLE_DEVICES=4 python run.py evaluate --lang ar --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name ar-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log4 &
-CUDA_VISIBLE_DEVICES=5 python run.py evaluate --lang fr --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name fr-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log5 &
-CUDA_VISIBLE_DEVICES=6 python run.py evaluate --lang de --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name de-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log6 &
-CUDA_VISIBLE_DEVICES=7 python run.py evaluate --lang sl --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name sl-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log7 &
+
+OUTPUT_PATH=./checkpoints/
+MODEL_PATH=bert-base-multilingual-cased
+CUDA_VISIBLE_DEVICES=0 python run.py train --lang en --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.en-bert &
+CUDA_VISIBLE_DEVICES=1 python run.py train --lang ja --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.ja-bert &
+CUDA_VISIBLE_DEVICES=2 python run.py train --lang zh --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.zh-bert &
+CUDA_VISIBLE_DEVICES=3 python run.py train --lang ko --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.ko-bert &
+CUDA_VISIBLE_DEVICES=4 python run.py train --lang ar --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.ar-bert &
+CUDA_VISIBLE_DEVICES=5 python run.py train --lang fr --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.fr-bert &
+CUDA_VISIBLE_DEVICES=6 python run.py train --lang de --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.de-bert &
+CUDA_VISIBLE_DEVICES=7 python run.py train --lang sl --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.sl-bert &
+wait
+CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang en --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name en-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.en-bert &
+CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang ja --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name ja-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.ja-bert &
+CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang zh --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name zh-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.zh-bert &
+CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang ko --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name ko-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.ko-bert &
+CUDA_VISIBLE_DEVICES=4 python run.py evaluate --lang ar --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name ar-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.ar-bert &
+CUDA_VISIBLE_DEVICES=5 python run.py evaluate --lang fr --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name fr-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.fr-bert &
+CUDA_VISIBLE_DEVICES=6 python run.py evaluate --lang de --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name de-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.de-bert &
+CUDA_VISIBLE_DEVICES=7 python run.py evaluate --lang sl --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name sl-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.sl-bert &
 ```
+
+=== The rest part is the original README.md from the fork. ===
+
+# Parsing as Tagging
+<p align="center">
+  <img src="https://github.com/rycolab/parsing-as-tagging/blob/main/header.jpg" width=400>
+  <img src="https://github.com/rycolab/parsing-as-tagging/blob/main/header-hexa.png" width=400>
+</p>
+This repository contains code for training and evaluation of two papers:
+
+- On Parsing as Tagging 
+- Hexatagging: Projective Dependency Parsing as Tagging
 
 ## Setting Up The Environment
 Set up a virtual environment and install the dependencies:
