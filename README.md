@@ -29,7 +29,20 @@ cd -
 
 ### For PTB and CTB
 
-(TBD)
+```bash
+ln -sf /home/sagyou/llmpp/treebanks ./
+
+# assign path of PTB/CTB to `en`/`zh` respectively in LANG_TO_DIR, change the string `ud` to `treebanks` in the __main__ `for` loop.
+python data/dep2bht.py
+
+for lang in en zh; do python run.py vocab --lang $lang --tagger hexa ; done
+
+CUDA_VISIBLE_DEVICES=6 python run.py train --lang en --max-depth 6 --tagger hexa --model bert --epochs 50 --batch-size 32 --lr 2e-5 --model-path xlnet-large-cased --output-path ./checkpoints/ --use-tensorboard False &> log.ptb & 
+CUDA_VISIBLE_DEVICES=7 python run.py train --lang zh --max-depth 6 --tagger hexa --model bert --epochs 50 --batch-size 32 --lr 2e-5 --model-path hfl/chinese-xlnet-mid --output-path ./checkpoints/ --use-tensorboard False &> log.ctb &
+
+CUDA_VISIBLE_DEVICES=6 python run.py evaluate --lang en --max-depth 10 --tagger hexa --bert-model-path xlnet-large-cased --model-name en-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log.ptb &
+CUDA_VISIBLE_DEVICES=7 python run.py evaluate --lang zh --max-depth 10 --tagger hexa --bert-model-path hfl/chinese-xlnet-mid --model-name zh-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log.ctb & 
+```
 
 ### For UD datasets
 
