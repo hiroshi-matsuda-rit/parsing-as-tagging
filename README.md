@@ -2,23 +2,52 @@
 
 ## PTB/CTB data conversion
 
-### Error recovery for `(NR Ken Madsen)` in CTB
+We split PTB (WSJ section of Treebank-3) and CTB (version 5.1) following [previous researches](https://aclanthology.org/D08-1059.pdf).
+Dependency trees are converted from constituency trees, using the tool of [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) (version 4.5.8).
 
-The erroneous constituent in CTB contains a person's name `(NR Ken Madsen)`.
+### Preparation of PTB data
+
+CoNLL-U format dependency trees of PTB are generated as below.
+```
+java -mx1g edu.stanford.nlp.trees.ud.UniversalDependenciesConverter -treeFile treebank > treebank.conllu
+```
+
+### Preparation of CTB data
+
+The original data of CTB is encoded as GB2312. We first convert it to UTF-8.
+```
+iconv -c -f GB2313 -t UTF-8 < bracketed_tree > bracketed_tree.utf8
+```
+
+CoNLL-U format dependency trees of CTB are generated as below.
+```
+java -mx1g edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructure -basic -keepPunct -conllx -treeFile bracketed_tree.utf8 > bracketed_tree.utf8.conllu
+```
+
+### Error recovery for CTB trees
+
+Sentence 16046 of Section 1117 of CTB cannot be converted correctly. This is caused by spaces within a token.
+
 Below is a part of the parse tree.
-
 ```
 (NP (NP-APP (NP-PN (NR 育空))
-					  (ADJP (JJ 知名))
-					  (NP (NN 环保)
-					      (NN 摄影家)))
-				  (NP-PN (NR Ken Madsen)))
-			      (CC 及)
+	  (ADJP (JJ 知名))
+	  (NP (NN 环保)
+	      (NN 摄影家)))
+  (NP-PN (NR Ken Madsen)))
 ```
-
-The problem is the "Ken Madsen" part.
-Although the name is a single leaf node, the Stanford Converter recognizes it as two tokens separated by a space.
+There is a space in the token `Ken Madsen`, a person's name. Although the name is a single leaf node, the Stanford Converter recognizes it as two tokens separated by a space.
 This causes an index out of boundary error.
+
+We fix the original node
+```
+(NP-PN (NR Ken Madsen))
+```
+to
+```
+(NP-PN (NR Ken) (NR Madsen))
+```
+making it possible to generate a valid dependency tree in CoNLL-U format.
 
 The relevant files are located under `/ctb_error_recovery`.
 
