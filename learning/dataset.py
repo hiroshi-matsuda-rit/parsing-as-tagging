@@ -129,7 +129,7 @@ class TaggingDataset(torch.utils.data.Dataset):
                     odd_labels * (
                         self.tag_system.decode_moderator.leaf_tag_vocab_size + 1) + even_labels)
             pos_ids[word_end_positions] = torch.tensor(pos_tags, dtype=torch.long)
-            pair_ids[word_end_positions] = torch.as_tensor(word_start_positions, dtype=torch.long)
+            pair_ids[word_end_positions] = torch.as_tensor(word_start_positions)
 
             end_of_word[word_end_positions] = 1
             end_of_word[word_end_positions[-1]] = 2  # last word
