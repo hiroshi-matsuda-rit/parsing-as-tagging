@@ -1,5 +1,29 @@
 # Procedure for reproducing experiments
 
+## PTB/CTB data conversion
+
+### Error recovery for `(NR Ken Madsen)` in CTB
+
+The erroneous constituent in CTB contains a person's name `(NR Ken Madsen)`.
+Below is a part of the parse tree.
+
+```
+(NP (NP-APP (NP-PN (NR 育空))
+					  (ADJP (JJ 知名))
+					  (NP (NN 环保)
+					      (NN 摄影家)))
+				  (NP-PN (NR Ken Madsen)))
+			      (CC 及)
+```
+
+The problem is the "Ken Madsen" part.
+Although the name is a single leaf node, the Stanford Converter recognizes it as two tokens separated by a space.
+This causes an index out of boundary error.
+
+The relevant files are located under `/ctb_error_recovery`.
+
+## Preparing and executing reproducing experiments
+
 ```bash
 git clone https://github.com/hiroshi-matsuda-rit/parsing-as-tagging.git
 cd parsing-as-tagging
