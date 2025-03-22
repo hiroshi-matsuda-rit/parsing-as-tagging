@@ -44,7 +44,7 @@ UD_LANG_TO_DIR = {
     "ru": "/UD_Russian-SynTagRus/ru_syntagrus-ud-{split}.conllu",
 }
 '''
-LANG_TO_DIR = {
+UD_LANG_TO_DIR = {
     "en": "/en_ewt-r2.15/en_ewt-ud-{split}.conllu",
     "ja": "/ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
     "zh": "/zh_gsdsimp-r2.15/zh_gsdsimp-ud-{split}.conllu",
