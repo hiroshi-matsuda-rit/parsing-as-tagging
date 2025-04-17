@@ -307,11 +307,11 @@ if __name__ == "__main__":
         print(f"Processing {language}...")
         if language == "English":
             # path = os.path.dirname(repo_directory) + "/ptb/ptb_{split}_3.3.0.sd.clean"
-            path = os.path.dirname(repo_directory) + "/data/ptb/ptb.{split}.conllu"
+            path = os.path.dirname(repo_directory) + "/data/ptb/ptb-ud-{split}.conllu"
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         elif language == "Chinese":
             # path = os.path.dirname(repo_directory) + "/ctb/{split}.ctb.conll"
-            path = os.path.dirname(repo_directory) + "/data/ctb5.1/chtb_{split}.fid.utf8.conllu"
+            path = os.path.dirname(repo_directory) + "/data/ctb5.1/cht5.1-ud-{split}.conllu"
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         # elif language in ["bg", "ca","cs","de","en","es","fr","it","nl","no","ro","ru"]:
         else:
