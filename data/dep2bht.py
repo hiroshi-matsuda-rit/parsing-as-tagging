@@ -307,17 +307,17 @@ if __name__ == "__main__":
         print(f"Processing {language}...")
         if language == "English":
             # path = os.path.dirname(repo_directory) + "/ptb/ptb_{split}_3.3.0.sd.clean"
-            path = os.path.dirname(repo_directory) + "/treebanks/ptb/ptb.{split}.conllu"
+            path = os.path.dirname(repo_directory) + "/data/ptb/ptb.{split}.conllu"
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         elif language == "Chinese":
             # path = os.path.dirname(repo_directory) + "/ctb/{split}.ctb.conll"
-            path = os.path.dirname(repo_directory) + "/treebanks/ctb5.1/chtb_{split}.fid.utf8.conllu"
+            path = os.path.dirname(repo_directory) + "/data/ctb5.1/chtb_{split}.fid.utf8.conllu"
             paths = [path.format(split=split) for split in ["train", "dev", "test"]]
         # elif language in ["bg", "ca","cs","de","en","es","fr","it","nl","no","ro","ru"]:
         else:
             assert language in LANG_TO_DIR, f"unknown language: {language}"
             # path = os.path.dirname(repo_directory)+f"/ctb_ptb_ud22/ud2.2/{LANG_TO_DIR[language]}"
-            path = os.path.dirname(repo_directory)+f"/ud/{LANG_TO_DIR[language]}"
+            path = os.path.dirname(repo_directory)+f"/data/{LANG_TO_DIR[language]}"
             paths = []
             groups = re.match(r'(\w+)_\w+-ud-(\w+)\.conllu', os.path.split(path)[-1])
 
