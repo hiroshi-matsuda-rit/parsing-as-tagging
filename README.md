@@ -69,13 +69,12 @@ tar zxf maltparser-1.9.2.tar.gz
 rm maltparser-1.9.2.tar.gz
 cd -
 
-ln -sf /home/sagyou/llmpp/treebanks data/
-ln -sf /home/sagyou/llmpp/ud data/
+ln -sf /home/sagyou/llmpp/data data/
 
 python data/dep2bht.py
 
 # ignore logs of bitsandbytes bug report info
-for lang in English Chinese en ja zh ko ar fr de sl ; do python run.py vocab --lang $lang --tagger hexa ; done
+for lang in English Chinese en ja zh ko ar fr de sl bg ca cs es it nl no ro ru zt e2 ; do python run.py vocab --lang $lang --tagger hexa ; done
 
 CUDA_VISIBLE_DEVICES=0 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path xlnet-large-cased --output-path ./checkpoints.xlnet/ --use-tensorboard False &> log.ptb-xlnet &
 CUDA_VISIBLE_DEVICES=1 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log.ptb-bert &
@@ -90,23 +89,11 @@ CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang Chinese --max-depth 10 --ta
 
 OUTPUT_PATH=./checkpoints/
 MODEL_PATH=bert-base-multilingual-cased
-CUDA_VISIBLE_DEVICES=0 python run.py train --lang en --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.en-bert &
-CUDA_VISIBLE_DEVICES=1 python run.py train --lang ja --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.ja-bert &
-CUDA_VISIBLE_DEVICES=2 python run.py train --lang zh --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.zh-bert &
-CUDA_VISIBLE_DEVICES=3 python run.py train --lang ko --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.ko-bert &
-CUDA_VISIBLE_DEVICES=4 python run.py train --lang ar --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.ar-bert &
-CUDA_VISIBLE_DEVICES=5 python run.py train --lang fr --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.fr-bert &
-CUDA_VISIBLE_DEVICES=6 python run.py train --lang de --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.de-bert &
-CUDA_VISIBLE_DEVICES=7 python run.py train --lang sl --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.sl-bert &
-wait
-CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang en --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name en-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.en-bert &
-CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang ja --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name ja-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.ja-bert &
-CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang zh --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name zh-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.zh-bert &
-CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang ko --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name ko-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.ko-bert &
-CUDA_VISIBLE_DEVICES=4 python run.py evaluate --lang ar --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name ar-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.ar-bert &
-CUDA_VISIBLE_DEVICES=5 python run.py evaluate --lang fr --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name fr-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.fr-bert &
-CUDA_VISIBLE_DEVICES=6 python run.py evaluate --lang de --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name de-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.de-bert &
-CUDA_VISIBLE_DEVICES=7 python run.py evaluate --lang sl --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name sl-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.sl-bert &
+for lang in en ja zh ko ar fr de sl bg ca cs es it nl no ro ru zt e2
+do
+  CUDA_VISIBLE_DEVICES=0 python run.py train --lang ${lang} --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path $MODEL_PATH --output-path $OUTPUT_PATH --use-tensorboard False &> log.${lang}-bert
+  CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang ${lang} --max-depth 10 --tagger hexa --bert-model-path $MODEL_PATH --model-name ${lang}-hexa-bert-2e-05-50 --batch-size 64 --model-path $OUTPUT_PATH &>> log.${lang}-bert
+done
 ```
 
 === The rest part is the original README.md from the fork. ===
