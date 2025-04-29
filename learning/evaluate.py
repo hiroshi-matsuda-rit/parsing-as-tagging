@@ -15,6 +15,8 @@ from tqdm import tqdm as tq
 
 from tagging.tree_tools import create_dummy_tree
 
+IGNORE_PUNCT = True
+
 repo_directory = os.path.abspath(__file__)
 
 class ParseMetrics(object):
@@ -217,7 +219,7 @@ def dependency_eval(
             pred_triples), f"wrong length {len(gt_triples)} vs. {len(pred_triples)}!"
 
         for x, y in zip(sorted(gt_triples), sorted(pred_triples)):
-            if is_punctuation(x[3]) and not ud_flag:
+            if IGNORE_PUNCT and is_punctuation(x[3]) and not ud_flag:
                 # ignoring punctuations for evaluation
                 continue
             assert x[0] == y[0], f"wrong tree {gt_triples} vs. {pred_triples}!"
@@ -253,7 +255,7 @@ def dependency_eval(
 
         for gt_triples, pred_triples in zip(loaded_gold_dev_triples, loaded_pred_dev_triples):
             for x, y in zip(sorted(gt_triples), sorted(pred_triples)):
-                if is_punctuation(x[3]):
+                if IGNORE_PUNCT and is_punctuation(x[3]):
                     # ignoring punctuations for evaluation
                     continue
                 assert x[0] == y[0], f"wrong tree {gt_triples} vs. {pred_triples}!"
@@ -505,7 +507,7 @@ def dependency_decoding(
             pred_triples), f"wrong length {len(gt_triples)} vs. {len(pred_triples)}!"
 
         for x, y in zip(sorted(gt_triples), sorted(pred_triples)):
-            if is_punctuation(x[3]) and not ud_flag:
+            if IGNORE_PUNCT and is_punctuation(x[3]) and not ud_flag:
                 # ignoring punctuations for evaluation
                 continue
             assert x[0] == y[0], f"wrong tree {gt_triples} vs. {pred_triples}!"
@@ -541,7 +543,7 @@ def dependency_decoding(
 
         for gt_triples, pred_triples in zip(loaded_gold_dev_triples, loaded_pred_dev_triples):
             for x, y in zip(sorted(gt_triples), sorted(pred_triples)):
-                if is_punctuation(x[3]):
+                if IGNORE_PUNCT and is_punctuation(x[3]):
                     # ignoring punctuations for evaluation
                     continue
                 assert x[0] == y[0], f"wrong tree {gt_triples} vs. {pred_triples}!"
