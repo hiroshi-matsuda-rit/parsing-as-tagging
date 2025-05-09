@@ -119,7 +119,7 @@ predict_parser.add_argument('--keep-per-depth', type=int, default=1,
 predict_parser.add_argument('--use-tensorboard', type=bool, default=False,
                       help="Whether to use the tensorboard for logging the results make sure "
                            "to add credentials to run.py if set to true")
-predict.add_argument('--use-gold-pos', action="store_true")
+predict_parser.add_argument('--use-gold-pos', action="store_true")
 
 
 def initialize_tag_system(reader, tagging_schema, lang, tag_vocab_path="",
