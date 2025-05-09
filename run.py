@@ -75,6 +75,7 @@ train.add_argument('--epochs', type=int, default=50)
 train.add_argument('--batch-size', type=int, default=32)
 train.add_argument('--num-warmup-steps', type=int, default=200)
 train.add_argument('--weight-decay', type=float, default=0.01)
+train.add_argument('--ignore-punct', action="store_true")
 train.add_argument('--use-gold-pos', action="store_true")
 
 evaluate.add_argument('--model-name', type=str, required=True)
