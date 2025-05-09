@@ -75,6 +75,7 @@ train.add_argument('--epochs', type=int, default=50)
 train.add_argument('--batch-size', type=int, default=32)
 train.add_argument('--num-warmup-steps', type=int, default=200)
 train.add_argument('--weight-decay', type=float, default=0.01)
+train.add_argument('--use-gold-pos', action="store_true")
 
 evaluate.add_argument('--model-name', type=str, required=True)
 evaluate.add_argument('--lang', choices=LANG, default=ENG, help="Language")
@@ -95,6 +96,8 @@ evaluate.add_argument('--keep-per-depth', type=int, default=1,
 evaluate.add_argument('--use-tensorboard', type=bool, default=False,
                       help="Whether to use the tensorboard for logging the results make sure "
                            "to add credentials to run.py if set to true")
+evaluate.add_argument('--ignore-punct', action="store_true")
+evaluate.add_argument('--use-gold-pos', action="store_true")
 
 
 predict_parser.add_argument('--model-name', type=str, required=True)
@@ -116,6 +119,7 @@ predict_parser.add_argument('--keep-per-depth', type=int, default=1,
 predict_parser.add_argument('--use-tensorboard', type=bool, default=False,
                       help="Whether to use the tensorboard for logging the results make sure "
                            "to add credentials to run.py if set to true")
+predict.add_argument('--use-gold-pos', action="store_true")
 
 
 def initialize_tag_system(reader, tagging_schema, lang, tag_vocab_path="",
@@ -194,7 +198,7 @@ def prepare_test_data(reader, tag_system, tagging_schema, model_name, batch_size
     return test_dataset, test_dataloader
 
 
-def generate_config(model_type, tagging_schema, tag_system, model_path, is_eng):
+def generate_config(model_type, tagging_schema, tag_system, model_path, is_eng, use_gold_pos):
     if model_type in BERTCRF or model_type in BERTLSTM:
         config = transformers.AutoConfig.from_pretrained(
             model_path,
@@ -220,9 +224,11 @@ def generate_config(model_type, tagging_schema, tag_system, model_path, is_eng):
                 'lstm_layers': 3,
                 'dropout': 0.33,
                 'is_eng': is_eng,
-                'use_pos': True
+                'use_pos': use_gold_pos,
             }
         )
+        if not use_gold_pos:
+            logging.warning("use_pos is set to False")
     elif model_type in BERT and tagging_schema != TETRATAGGER and tagging_schema != HEXATAGGER:
         config = transformers.AutoConfig.from_pretrained(
             model_path,
@@ -240,9 +246,9 @@ def generate_config(model_type, tagging_schema, tag_system, model_path, is_eng):
     return config
 
 
-def initialize_model(model_type, tagging_schema, tag_system, model_path, is_eng):
+def initialize_model(model_type, tagging_schema, tag_system, model_path, is_eng, use_gold_pos):
     config = generate_config(
-        model_type, tagging_schema, tag_system, model_path, is_eng
+        model_type, tagging_schema, tag_system, model_path, is_eng, use_gold_pos
     )
     if model_type in BERT:
         model = ModelForTetratagging(config=config)
@@ -314,7 +320,7 @@ def train_command(args):
     logging.info("Initializing The Model")
     is_eng = True if args.lang == ENG else False
     model = initialize_model(
-        args.model, args.tagger, tag_system, args.model_path, is_eng
+        args.model, args.tagger, tag_system, args.model_path, is_eng, args.use_gold_pos
     )
     model.to(device)
 
@@ -387,7 +393,7 @@ def train_command(args):
                 dev_metrics_las, dev_metrics_uas = dependency_eval(
                     predictions, eval_labels, eval_dataset,
                     tag_system, None, "", args.max_depth,
-                    args.keep_per_depth, False)
+                    args.keep_per_depth, False, args.ignore_punct)
             else:
                 dev_metrics = calc_parse_eval(
                     predictions, eval_labels, eval_dataset,
@@ -527,7 +533,7 @@ def evaluate_command(args):
 
     is_eng = True if args.lang == ENG else False
     model = initialize_model(
-        model_type, tagging_schema, tag_system, args.bert_model_path, is_eng
+        model_type, tagging_schema, tag_system, args.bert_model_path, is_eng, args.use_gold_pos
     )
     model.load_state_dict(torch.load(args.model_path + args.model_name))
     model.to(device)
@@ -543,7 +549,7 @@ def evaluate_command(args):
         dev_metrics_las, dev_metrics_uas = dependency_eval(
             predictions, eval_labels, eval_dataset,
             tag_system, args.output_path, args.model_name,
-            args.max_depth, args.keep_per_depth, False)
+            args.max_depth, args.keep_per_depth, False, args.ignore_punct)
         print(
             "LAS: ", dev_metrics_las, "\n",
             "UAS: ", dev_metrics_uas, sep=""
@@ -581,7 +587,7 @@ def predict_command(args):
 
     is_eng = True if args.lang == ENG else False
     model = initialize_model(
-        model_type, tagging_schema, tag_system, args.bert_model_path, is_eng
+        model_type, tagging_schema, tag_system, args.bert_model_path, is_eng, args.use_gold_pos
     )
     model.load_state_dict(torch.load(args.model_path + args.model_name))
     model.to(device)
@@ -596,7 +602,7 @@ def predict_command(args):
         pred_output = dependency_decoding(
             predictions, eval_labels, eval_dataset,
             tag_system, args.output_path, args.model_name,
-            args.max_depth, args.keep_per_depth, False)
+            args.max_depth, args.keep_per_depth, False, args.ignore_punct)
 
         with open(args.output_path + args.model_name + ".pred.json", "w") as fout:
             print("Saving predictions to", args.output_path + args.model_name + ".pred.json")
