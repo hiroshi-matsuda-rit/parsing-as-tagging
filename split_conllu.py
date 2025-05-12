@@ -4,9 +4,9 @@ from pathlib import Path
 
 dataset_splits = {
     'ptb': {
-        'train': set(range(2, 21 + 1)),
-        'dev': set(range(22, 22 + 1)),
-        'test': set(range(23, 23 + 1))
+        'train': set(range(2 * 100, (21 + 1) * 100)),
+        'dev': set(range(22 * 100, (22 + 1) * 100)),
+        'test': set(range(23 * 100, (23 + 1) * 100))
     },
     'ctb': {
         'train': set(range(1, 815 + 1)) | set(range(1001, 1136 + 1)),
@@ -31,7 +31,7 @@ def main():
     for file_path in glob.glob(data_path):
         file_path = Path(file_path)
         try:
-            sec_id = int(file_path.name.split('_')[-1].split('.')[0])
+            sec_id = int(file_path.parent.name.split('_')[-1].split('.')[0])
         except:
             print('unrelated:', file_path, file=sys.stderr)
             continue
@@ -41,7 +41,7 @@ def main():
                 print(f'{split}:', file_path, file=sys.stderr)
                 break
         else:
-            print('skipping:', file_path, sys.stderr)
+            print('skipping:', file_path, file=sys.stderr)
 
     for split, file_list in splits_expand.items():
         with open(output_path_format.format(dataset, split), 'w', encoding='utf8') as fw:
