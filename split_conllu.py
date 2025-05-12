@@ -31,17 +31,17 @@ def main():
     for file_path in glob.glob(data_path):
         file_path = Path(file_path)
         try:
-            sec_id = int(file_path.name().split('_')[-1].split(".")[0])
+            sec_id = int(file_path.name().split('_')[-1].split('.')[0])
         except:
-            print('unrelated:', file_path, file=sys.stderr)
+            print('unrelated:', file_path.name(), file=sys.stderr)
             continue
         for split, sp_range in splits.items():
             if sec_id in sp_range:
                 splits_expand[split].append(file_path)
-                print(f'{split}:', file_path, file=sys.stderr)
+                print(f'{split}:', file_path.name(), file=sys.stderr)
                 break
         else:
-            print('skipping:', file_path, sys.stderr)
+            print('skipping:', file_path.name(), sys.stderr)
 
     for split, file_list in splits_expand.items():
         with open(output_path_format.format(dataset, split), 'w', encoding='utf8') as fw:
