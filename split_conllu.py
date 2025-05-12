@@ -24,7 +24,7 @@ output_path_format = '{}-ud-{}.conllu'
 def main():
     dataset = sys.argv[1]
     splits = dataset_splits[dataset]
-    data_path = Path(sys.argv[2] if len(sys.argv) > 2 else default_path[dataset])
+    data_path = sys.argv[2] if len(sys.argv) > 2 else default_path[dataset]
     print('data_path =', data_path, sys.stderr)
     splits_expand = {'train': [], 'dev': [], 'test': []}
 
