@@ -5,6 +5,9 @@ from pathlib import Path
 
 dataset_splits = {
     "ptb": {
+        'train': set(range(2, 21 + 1)),
+        'dev': set(range(22, 22 + 1)),
+        'test': set(range(23, 23 + 1))
     },
     "ctb": {
         'train': set(range(1, 815 + 1)) | set(range(1001, 1136 + 1)),
@@ -13,7 +16,7 @@ dataset_splits = {
     },
 }
 default_dir = {
-    'ptb': '',
+    'ptb': 'datasets/PTB/treebank_3/parsed/mrg/wsj/*/*',
     'ctb': 'datasets/CTB/ctb5.1_507K/*',
 }
 data_suffix = '.fid.utf8.conllu'
