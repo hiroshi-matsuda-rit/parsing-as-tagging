@@ -62,7 +62,7 @@ def main():
                                 print(line, file=fw)
                             continue
                         elif line == "":
-                            text = word_delimiter.join(words).rstrip()
+                            text = ''.join(words).rstrip()
                             print(f'# sent_id = {split}-{file_path.stem.split(".")[0]}-{sent_id:03}', file=fw)
                             print(f'# text = {text}', file=fw)
                             print(*buffer, sep='\n', file=fw)
@@ -75,7 +75,7 @@ def main():
                             r = line.split('\t')
                             word = r[1]
                             if 'SpaceAfter=No' not in r[9]:
-                                word += ' '
+                                word += word_delimiter
                             words.append(word)
 
 
