@@ -31,7 +31,7 @@ def main():
     for file_path in glob.glob(data_path):
         file_path = Path(file_path)
         try:
-            sec_id = int(file_path.parent.name.split('_')[-1].split('.')[0])
+            sec_id = int(file_path.name.split('_')[-1].split('.')[0])
         except:
             print('unrelated:', file_path, file=sys.stderr)
             continue
