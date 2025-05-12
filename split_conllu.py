@@ -1,25 +1,35 @@
+import glob
 import os
 import sys
 from pathlib import Path
 
-splits = {
-    'train': set(range(1, 815 + 1)) | set(range(1001, 1136 + 1)),
-    'dev': set(range(886, 931 + 1)) | set(range(1148, 1151 + 1)),
-    'test': set(range(816, 885 + 1)) | set(range(1137, 1147 + 1)),
+dataset_splits = {
+    "ptb": {
+    },
+    "ctb": {
+        'train': set(range(1, 815 + 1)) | set(range(1001, 1136 + 1)),
+        'dev': set(range(886, 931 + 1)) | set(range(1148, 1151 + 1)),
+        'test': set(range(816, 885 + 1)) | set(range(1137, 1147 + 1)),
+    },
 }
-data_prefix = 'chtb_'
+default_dir = {
+    'ptb': '',
+    'ctb': 'datasets/CTB/ctb5.1_507K/*',
+}
 data_suffix = '.fid.utf8.conllu'
+output_filename_format = '{}-ud-{}.conllu'
 
 
 def main():
-    data_dir = Path(sys.argv[1] if len(sys.argv) > 1 else 'datasets/CTB/ctb5.1_507K')
+    dataset = sys.argv[1]
+    splits = dataset_splits[dataset]
+    data_dir = Path(sys.argv[2] if len(sys.argv) > 2 else default_dir[dataset])
     print('data_dir =', data_dir, sys.stderr)
     splits_expand = {'train': [], 'dev': [], 'test': []}
 
-    for file_name in os.listdir(data_dir):
-        if file_name.startswith(data_prefix) and file_name.endswith(data_suffix):
+    for file_name in glob.glob(data_dir):
+        if file_name.endswith(data_suffix):
             try:
-                #sec_id = int(file_name.lstrip(data_prefix).rstrip(data_suffix))
                 sec_id = int(file_name.split('_')[1].split('.')[0])
             except:
                 print('unrelated:', file_name, sys.stderr)
@@ -33,7 +43,7 @@ def main():
                 print('skipping:', file_name, sys.stderr)
 
     for split, file_list in splits_expand.items():
-        with open(os.path.join(data_dir, f'{data_prefix}{split}{data_suffix}'), 'w') as fw:
+        with open(os.path.join(data_dir, output_filename_format.format(dataset, split)), 'w') as fw:
             for file_path in file_list:
                 sent_id = 1
                 words = []
