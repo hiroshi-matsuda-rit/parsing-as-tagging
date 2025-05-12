@@ -16,7 +16,7 @@ dataset_splits = {
 }
 default_path = {
     'ptb': 'datasets/ptb/treebank_3/parsed/mrg/wsj/*/*.conllu',
-    'ctb': 'datasets/ctb/ctb5.1_507K/*.conllu',
+    'ctb': 'datasets/ctb/ctb5.1_507K/data/bracketed/*.conllu',
 }
 output_path_format = '{}-ud-{}.conllu'
 
