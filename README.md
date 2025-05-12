@@ -1,11 +1,13 @@
 # Procedure for reproducing experiments
 
-## PTB/CTB data conversion
+## Data conversion
 
 We split PTB (WSJ section of Treebank-3) and CTB (version 5.1) following [previous researches](https://aclanthology.org/D08-1059.pdf).
 Dependency trees are converted from constituency trees, using the tool of [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) (version 4.5.8).
 
-### Preparation of PTB data
+### PTB
+
+### Preparation
 
 CoNLL-U format dependency trees of PTB are generated as below.
 ```
@@ -13,7 +15,11 @@ java -mx1g edu.stanford.nlp.trees.ud.UniversalDependenciesConverter -treeFile tr
 ```
 Here, `treebank` refers to files located at `PTB/treebank_3/parsed/mrg/wsj/*`.
 
-### Preparation of CTB data
+### Split into train/dev/test sets
+
+### CTB
+
+#### Preparation
 
 The original data of CTB is encoded as GB2312. We first convert it to UTF-8.
 ```
@@ -26,7 +32,7 @@ CoNLL-U format dependency trees of CTB are generated as below.
 java -mx1g edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructure -basic -keepPunct -conllx -treeFile bracketed_tree.utf8 > bracketed_tree.utf8.conllu
 ```
 
-### Error recovery for CTB trees
+#### Error recovery for CTB trees
 
 Sentence 16046 of Section 1117 of CTB cannot be converted correctly. This is caused by spaces within a token.
 
@@ -53,11 +59,11 @@ making it possible to generate a valid dependency tree in CoNLL-U format.
 
 The relevant files are located under `/ctb_error_recovery`.
 
-### Generation of train/dev/test files
+### Split into train/dev/test sets
 
 After converting constituency trees to dependency trees (in conllu format), we assign dependency trees to train/dev/test files, respectively, according to there usages. The script is 
 ```bash
-python output_to_conllu.py
+python ctb_split_conllu.py
 ```
 You need to modify the variables in the first several lines. The `splits` variable is used to specify ranges of section ids for each split.
 
