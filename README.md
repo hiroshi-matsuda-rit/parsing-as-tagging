@@ -3,32 +3,56 @@
 ## Data conversion
 
 We split PTB (WSJ section of Treebank-3) and CTB (version 5.1) following [previous researches](https://aclanthology.org/D08-1059.pdf).
-Dependency trees are converted from constituency trees, using the tool of [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) (version 4.5.8).
 
-## Preparation
+### Set up stanford-corenlp
 
-### Penn Tree-bank
+Dependency trees are converted from constituency trees, using the tool of [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) ([version 4.5.8](https://nlp.stanford.edu/software/stanford-corenlp-4.5.8.zip)).
+After downloading and inflating the zip archive, execute following commands.
+
+```Bash
+cd stanford-corenlp-4.5.8
+for file in `find . -name "*.jar"`
+do
+  export CLASSPATH="$CLASSPATH:`realpath $file`"
+done
+cd ..
+```
+
+### Preparation
+
+#### Penn Tree-bank
 
 The CoNLL-U format dependency trees of PTB are generated as below.
 
 ```Bash
-for target_dir in `ls datasets/ptb/treebank_3/parsed/mrg/wsj/*/*.mrg`
+wsj=datasets/ptb/treebank_3/parsed/mrg/wsj
+for target in `ls $wsj/0[2-9]/*.mrg $wsj/1[0-9]/*.mrg $wsj/2[0-3]/*.mrg`
+do
+  echo processing $target
   java -mx1g edu.stanford.nlp.trees.ud.UniversalDependenciesConverter -treeFile $target > $target.conllu
 done
 ```
 
-### Chinese Penn Tree-bank
+#### Chinese Penn Tree-bank
 
 The original data of CTB is encoded as GB2312. We first convert it to UTF-8.
 
 ```Bash
 for target in `ls datasets/ctb/ctb5.1_507K/data/bracketed/*.fid`
 do
-  iconv -c -f GB2313 -t UTF-8 $target > $target.utf8
+  iconv -c -f GB2312 -t UTF-8 < $target > $target.utf8
 done
 ```
 
-Sentence 16046 located in `chtb_1117.fid: Section 1117` cannot be converted correctly. This is caused by spaces within a token.
+Sentence 16046 located in `chtb_1117.fid: Section 1117` cannot be converted correctly.
+Execute following command to avoid this problem.
+
+```Bash
+sed -i '' 's/(NP-PN (NR Ken Madsen))/(NP-PN (NR Ken) (NR Madsen))/' datasets/ctb/ctb5.1_507K/data/bracketed/chtb_1117.fid.utf8
+# On Mac, you need to add empty argument for -i option
+# sed -i '' 's/(NP-PN (NR Ken Madsen))/(NP-PN (NR Ken) (NR Madsen))/' datasets/ctb/ctb5.1_507K/data/bracketed/chtb_1117.fid.utf8
+```
+
 Below is a part of the parse tree.
 ```
 (NP (NP-APP (NP-PN (NR 育空))
@@ -50,17 +74,16 @@ to
 ```
 making it possible to generate a valid dependency tree in CoNLL-U format.
 
-```Bash
-sed -i 's/(NP-PN (NR Ken Madsen))/(NP-PN (NR Ken) (NR Madsen))/' datasets/ctb/ctb5.1_507K/data/bracketed/chtb_1117.fid.utf8
-```
-
 The CoNLL-U format dependency trees of CTB are generated as below.
+The last step is for recovering the error caused by incorrect annotations in `chtb_414.fid`.
 
 ```Bash
-for target in `ls dataset/ctb/ctb5.1_507K/data/brackete/*.utf8`
+for target in `ls datasets/ctb/ctb5.1_507K/data/bracketed/*.utf8`
 do
-  java -mx1g edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructure -basic -keepPunct -conllx -treeFile $target$ > $target$.conllu
+  echo processing $target
+  java -mx1g edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructure -basic -keepPunct -conllx -treeFile $target > $target.conllu
 done
+cp ctb_error_recovery/chtb_414.fid.utf8.conllu datasets/ctb/ctb5.1_507K/data/bracketed/
 ```
 
 ### Split into train/dev/test files
@@ -68,8 +91,8 @@ done
 After converting constituency trees to dependency trees (in conllu format), we assign dependency trees to train/dev/test files, respectively.
 
 ```bash
-python split_conllu.py PTB
-python split_conllu.py CTB
+python split_conllu.py ptb
+python split_conllu.py ctb
 ```
 
 ## Preparing and executing reproducing experiments
