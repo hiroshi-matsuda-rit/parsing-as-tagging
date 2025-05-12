@@ -25,7 +25,7 @@ def main():
     dataset = sys.argv[1]
     splits = dataset_splits[dataset]
     data_path = sys.argv[2] if len(sys.argv) > 2 else default_path[dataset]
-    print('data_path =', data_path, sys.stderr)
+    print('data_path =', data_path, file=sys.stderr)
     splits_expand = {'train': [], 'dev': [], 'test': []}
 
     for file_path in glob.glob(data_path):
@@ -33,12 +33,12 @@ def main():
         try:
             sec_id = int(file_path.stem().split('_')[-1])
         except:
-            print('unrelated:', file_path, sys.stderr)
+            print('unrelated:', file_path, file=sys.stderr)
             continue
         for split, sp_range in splits.items():
             if sec_id in sp_range:
                 splits_expand[split].append(file_path)
-                print(f'{split}:', file_path, sys.stderr)
+                print(f'{split}:', file_path, file=sys.stderr)
                 break
         else:
             print('skipping:', file_path, sys.stderr)
