@@ -58,7 +58,7 @@ def main():
                             continue
                         elif line == "":
                             text = ''.join(words).rstrip()
-                            print(f'# sent_id = {split}-{file_path.stem}-s{sent_id}', file=fw)
+                            print(f'# sent_id = {split}-{file_path.stem.split(".")[0]}-{sent_id:03}', file=fw)
                             print(f'# text = {text}', file=fw)
                             print(*buffer, sep='\n', file=fw)
                             print(file=fw)
