@@ -18,6 +18,10 @@ default_path = {
     'ptb': 'datasets/ptb/treebank_3/parsed/mrg/wsj/*/*.conllu',
     'ctb': 'datasets/ctb/ctb5.1_507K/data/bracketed/*.conllu',
 }
+dataset_word_delimiter = {
+    'ptb': ' ',
+    'ctb': '',
+}
 output_path_format = '{}-ud-{}.conllu'
 
 
@@ -26,6 +30,7 @@ def main():
     splits = dataset_splits[dataset]
     data_path = sys.argv[2] if len(sys.argv) > 2 else default_path[dataset]
     print('data_path =', data_path, file=sys.stderr)
+    word_delimiter = dataset_word_delimiter[dataset]
     splits_expand = {'train': [], 'dev': [], 'test': []}
 
     for file_path in glob.glob(data_path):
@@ -57,7 +62,7 @@ def main():
                                 print(line, file=fw)
                             continue
                         elif line == "":
-                            text = ''.join(words).rstrip()
+                            text = word_delimiter.join(words).rstrip()
                             print(f'# sent_id = {split}-{file_path.stem.split(".")[0]}-{sent_id:03}', file=fw)
                             print(f'# text = {text}', file=fw)
                             print(*buffer, sep='\n', file=fw)
