@@ -120,17 +120,27 @@ python data/dep2bht.py
 # ignore logs of bitsandbytes bug report info
 for lang in English Chinese en ja zh ko ar fr de sl bg ca cs es it nl no ro ru zt e2 ; do python run.py vocab --lang $lang --tagger hexa ; done
 
-CUDA_VISIBLE_DEVICES=0 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path xlnet-large-cased --output-path ./checkpoints.xlnet/ --use-tensorboard False &> log.ptb-xlnet &
-CUDA_VISIBLE_DEVICES=1 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log.ptb-bert &
-CUDA_VISIBLE_DEVICES=2 python run.py train --lang Chinese --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path hfl/chinese-xlnet-mid --output-path ./checkpoints.xlnet/ --use-tensorboard False &> log.ctb-xlnet &
-CUDA_VISIBLE_DEVICES=3 python run.py train --lang Chinese --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log.ctb-bert &
-wait
-CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang English --max-depth 10 --tagger hexa --bert-model-path xlnet-large-cased --model-name English-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet/ &>> log.ptb-xlnet &
-CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang English --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name English-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log.ptb-bert &
-CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang Chinese --max-depth 10 --tagger hexa --bert-model-path hfl/chinese-xlnet-mid --model-name Chinese-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet/ &>> log.ctb-xlnet &
-CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang Chinese --max-depth 10 --tagger hexa --bert-model-path bert-base-multilingual-cased --model-name Chinese-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints/ &>> log.ctb-bert &
+# for PTB without gold-pos
+CUDA_VISIBLE_DEVICES=0 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path xlnet-large-cased --output-path ./checkpoints.xlnet/ --use-tensorboard False &> log.ptb-xlnet && \
+CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang English --max-depth 10 --tagger hexa --bert-model-path xlnet-large-cased --model-name English-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet/ &>> log.ptb-xlnet && \
+CUDA_VISIBLE_DEVICES=0 python run.py evaluate --lang English --max-depth 10 --tagger hexa --bert-model-path xlnet-large-cased --model-name English-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet/ --ignore-punct &>> log.ptb-xlnet &
 
+# for PTB with gold-pos
+CUDA_VISIBLE_DEVICES=1 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path xlnet-large-cased --output-path ./checkpoints.xlnet.gold-pos/ --use-gold-pos --use-tensorboard False &> log.ptb-xlnet.gold-pos && \
+CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang English --max-depth 10 --tagger hexa --bert-model-path xlnet-large-cased --model-name English-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet.gold-pos/ --use-gold-pos &>> log.ptb-xlnet.gold-pos && \
+CUDA_VISIBLE_DEVICES=1 python run.py evaluate --lang English --max-depth 10 --tagger hexa --bert-model-path xlnet-large-cased --model-name English-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet.gold-pos/ --use-gold-pos --ignore-punct &>> log.ptb-xlnet.gold-pos &
 
+# for CTB without gold-pos
+CUDA_VISIBLE_DEVICES=2 python run.py train --lang Chinese --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path hfl/chinese-xlnet-mid --output-path ./checkpoints.xlnet/ --use-tensorboard False &> log.ctb-xlnet && \
+CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang Chinese --max-depth 10 --tagger hexa --bert-model-path hfl/chinese-xlnet-mid --model-name Chinese-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet/ &>> log.ctb-xlnet && \
+CUDA_VISIBLE_DEVICES=2 python run.py evaluate --lang Chinese --max-depth 10 --tagger hexa --bert-model-path hfl/chinese-xlnet-mid --model-name Chinese-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet/ --ignore-punct &>> log.ctb-xlnet &
+
+# for CTB with gold-pos
+CUDA_VISIBLE_DEVICES=3 python run.py train --lang Chinese --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path hfl/chinese-xlnet-mid --output-path ./checkpoints.xlnet.gold-pos/ --use-gold-pos --use-tensorboard False &> log.ctb-xlnet.gold-pos && \
+CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang Chinese --max-depth 10 --tagger hexa --bert-model-path hfl/chinese-xlnet-mid --model-name Chinese-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet.gold-pos/ --use-gold-pos &>> log.ctb-xlnet.gold-pos && \
+CUDA_VISIBLE_DEVICES=3 python run.py evaluate --lang Chinese --max-depth 10 --tagger hexa --bert-model-path hfl/chinese-xlnet-mid --model-name Chinese-hexa-bert-2e-05-50 --batch-size 64 --model-path ./checkpoints.xlnet.gold-pos/ --use-gold-pos --ignore-punct &>> log.ctb-xlnet.gold-pos &
+
+# for UD
 OUTPUT_PATH=./checkpoints/
 MODEL_PATH=bert-base-multilingual-cased
 for lang in en ja zh ko ar fr de sl bg ca cs es it nl no ro ru zt e2
