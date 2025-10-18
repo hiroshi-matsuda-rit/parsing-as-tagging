@@ -52,9 +52,9 @@ LANG_TO_DIR = {
 LANG = [BAQ, CHN, CHN09, FRE, GER, HEB, HUN, KOR, POL, SWE, ENG,
         "en","ja","jb","fr","cs"]
 LANG_TO_DIR = {
-    "en": "/en_ewt-r2.15/en_ewt-ud-{split}.conllu",
-    "ja": "/ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
-    "jb": "/ja_bccwj-r2.15/ja_bccwj-ud-{split}.conllu",
-    "fr": "/fr_gsd-r2.15/fr_gsd-ud-{split}.conllu",
-    "cs": "/cs_pdt-r2.15/cs_pdt-ud-{split}.conllu",
+    "en": "/*en_ewt-r2.15/en_ewt-ud-{split}.conllu",
+    "ja": "/*ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
+    "jb": "/*ja_bccwj-r2.15/ja_bccwj-ud-{split}.conllu",
+    "fr": "/*fr_gsd-r2.15/fr_gsd-ud-{split}.conllu",
+    "cs": "/*cs_pdt-r2.15/cs_pdt-ud-{split}.conllu",
 }

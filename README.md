@@ -61,7 +61,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # preparing java library
-sudo apt install -y 
+sudo apt install -y openjdk-8-jdk
 mkdir ../malt
 cd ../malt
 curl -o maltparser-1.9.2.tar.gz https://maltparser.org/dist/maltparser-1.9.2.tar.gz
