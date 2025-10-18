@@ -45,11 +45,11 @@ LANG_TO_DIR = {
 }
 '''
 LANG_TO_DIR = {
-    "en": "/*en_ewt-r2.15/en_ewt-ud-{split}.conllu",
-    "ja": "/*ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
-    "jb": "/*ja_bccwj-r2.15/ja_bccwj-ud-{split}.conllu",
-    "fr": "/*fr_gsd-r2.15/fr_gsd-ud-{split}.conllu",
-    "cs": "/*cs_pdt-r2.15/cs_pdt-ud-{split}.conllu",
+    "en": "/English@en_ewt-r2.15/en_ewt-ud-{split}.conllu",
+    "ja": "/Japanese@ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
+    "jb": "/Japanese@ja_bccwj-r2.15/ja_bccwj-ud-{split}.conllu",
+    "fr": "/French@fr_gsd-r2.15/fr_gsd-ud-{split}.conllu",
+    "cs": "/Czech@cs_pdt-r2.15/cs_pdt-ud-{split}.conllu",
 }
 
 
@@ -307,8 +307,8 @@ if __name__ == "__main__":
         exit(0)
 
     for language in [
-        "English",  # PTB
-        "Chinese",  # CTB
+        #"English",  # PTB
+        #"Chinese",  # CTB
         #"bg","ca","cs","de","en","es","fr","it","nl","no","ro","ru" # UD2.2
     ] + list(LANG_TO_DIR.keys()):
         print(f"Processing {language}...")
