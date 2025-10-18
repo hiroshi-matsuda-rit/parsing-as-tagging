@@ -352,6 +352,21 @@ def train_command(args):
         t = 1
         model.train()
 
+        import sys
+        targets = ["bert", "endofword_embedding", "lstm", "projection"]
+        if model.use_pos:
+            targets.append("pos_encoder")
+        params = {}
+        for target in targets:
+            net = getattr(model, target)
+            num_params = 0
+            for p in net.parameters():
+                if p.requires_grad:
+                    num_params += p.numel()
+            params[target] = num_params
+            print(f"parameter size: {target} = {num_params}", file=sys.stderr)
+        print(f"parameter size: total = {sum(params.values())}", file=sys.stderr)
+
         with tq(train_dataloader, disable=False) as progbar:
             for batch in progbar:
                 batch = {k: v.to(device) for k, v in batch.items()}
