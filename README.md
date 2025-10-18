@@ -64,7 +64,7 @@ pip install -r requirements.txt
 sudo apt install -y 
 mkdir ../malt
 cd ../malt
-curl -o maltparser-1.9.2.tar.gz http://maltparser.org/dist/maltparser-1.9.2.tar.gz
+curl -o maltparser-1.9.2.tar.gz https://maltparser.org/dist/maltparser-1.9.2.tar.gz
 tar zxf maltparser-1.9.2.tar.gz
 rm maltparser-1.9.2.tar.gz
 cd -

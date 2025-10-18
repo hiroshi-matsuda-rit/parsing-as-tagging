@@ -22,7 +22,6 @@ LANG_TO_DIR = {
     "ro": "/UD_Romanian-RRT/ro_rrt-ud-{split}.conllu",
     "ru": "/UD_Russian-SynTagRus/ru_syntagrus-ud-{split}.conllu",
 }
-'''
 LANG_TO_DIR = {
     "en": "/en_ewt-r2.15/en_ewt-ud-{split}.conllu",
     "ja": "/ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
@@ -43,6 +42,14 @@ LANG_TO_DIR = {
     "ru": "/ru_syntagrus-r2.15/ru_syntagrus-ud-{split}.conllu",
     "zt": "/zh_gsd-r2.15/zh_gsd-ud-{split}.conllu",
     "e2": "/en_ewt-r2.2/en_ewt-ud-{split}.conllu",
+}
+'''
+LANG_TO_DIR = {
+    "en": "/en_ewt-r2.15/en_ewt-ud-{split}.conllu",
+    "ja": "/ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
+    "jb": "/ja_bccwj-r2.15/ja_bccwj-ud-{split}.conllu",
+    "fr": "/fr_gsd-r2.15/fr_gsd-ud-{split}.conllu",
+    "cs": "/cs_pdt-r2.15/cs_pdt-ud-{split}.conllu",
 }
 
 
