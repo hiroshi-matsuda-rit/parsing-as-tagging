@@ -46,7 +46,7 @@ class Tagger(ABC):
         except Exception as e:
             print("Internal error occured. Remove following lines from the source conllu file.")
             print(tree)
-            return []
+            return [[]]
 
     def tree_to_ids_pipeline(self, tree: Tree) -> [int]:
         tags = self.tree_to_tags_pipeline(tree)[0]
