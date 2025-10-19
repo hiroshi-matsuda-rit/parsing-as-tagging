@@ -71,6 +71,8 @@ cd -
 
 ln -sf /home/sagyou/llmpp/data data/
 
+# for ja_bccwj: you need to fix nltk bug by editing line #40 in `venv/lib/python3.10/site-packages/nltk/parse/dependencygraph.py` as `cell_separator="\t",`
+
 python data/dep2bht.py
 
 # ignore logs of bitsandbytes bug report info

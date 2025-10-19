@@ -40,8 +40,13 @@ class Tagger(ABC):
         raise NotImplementedError("tags to tree is not implemented")
 
     def tree_to_tags_pipeline(self, tree: Tree) -> ([str], int):
-        ptree = self.preprocess(tree)
-        return self.tree_to_tags(ptree)
+        try:
+            ptree = self.preprocess(tree)
+            return self.tree_to_tags(ptree)
+        except Exception as e:
+            print("Internal error occured. Remove following lines from the source conllu file.")
+            print(tree)
+            return []
 
     def tree_to_ids_pipeline(self, tree: Tree) -> [int]:
         tags = self.tree_to_tags_pipeline(tree)[0]

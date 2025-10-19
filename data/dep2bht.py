@@ -47,7 +47,7 @@ LANG_TO_DIR = {
 LANG_TO_DIR = {
     "en": "/English@en_ewt-r2.15/en_ewt-ud-{split}.conllu",
     "ja": "/Japanese@ja_gsd-r2.15/ja_gsd-ud-{split}.conllu",
-    "jb": "/Japanese@ja_bccwj-r2.15/ja_bccwj-ud-{split}.conllu",
+    "jb": "/hexatagger@ja_bccwj-r2.15/ja_bccwj-ud-{split}.conllu",
     "fr": "/French@fr_gsd-r2.15/fr_gsd-ud-{split}.conllu",
     "cs": "/Czech@cs_pdt-r2.15/cs_pdt-ud-{split}.conllu",
 }
