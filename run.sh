@@ -1,7 +1,7 @@
 #!/bin/bash
 
-model=$1
-lang=$2
+lang=$1
+model=$2
 model_path_name=${model#*/}
 for r in 1 2 3 4 ; do
   python run.py vocab --lang ${lang} --tagger hexa
