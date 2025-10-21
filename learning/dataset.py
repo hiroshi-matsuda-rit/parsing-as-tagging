@@ -107,6 +107,12 @@ class TaggingDataset(torch.utils.data.Dataset):
         word_start_positions = [
             encoded.char_to_token(i)
             for i in np.cumsum([0] + [len(word) + 1 for word in words])[:-1]]
+        for i, (sp, ep) in enumerate(zip(word_start_positions, word_end_positions)):
+            if sp is None or ep is None:
+                if i > 0:
+                    word_start_positions[i] = word_end_positions[i - 1] + 1
+                if i + 1 < len(word_start_positions):
+                    word_end_positions[i] = word_start_positions[i + 1] - 1
 
         input_ids = torch.tensor(encoded['input_ids'], dtype=torch.long)
         pair_ids = torch.zeros_like(input_ids)
