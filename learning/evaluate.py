@@ -18,12 +18,14 @@ from tagging.tree_tools import create_dummy_tree
 repo_directory = os.path.abspath(__file__)
 
 class ParseMetrics(object):
-    def __init__(self, recall, precision, fscore, complete_match, tagging_accuracy=100):
+    def __init__(self, recall, precision, fscore, complete_match, tagging_accuracy=100, gold_count=None, pred_count=None):
         self.recall = recall
         self.precision = precision
         self.fscore = fscore
         self.complete_match = complete_match
         self.tagging_accuracy = tagging_accuracy
+        self.gold_count = gold_count
+        self.pred_count = pred_count
 
     def __str__(self):
         if self.tagging_accuracy < 100:
@@ -31,8 +33,12 @@ class ParseMetrics(object):
                 self.recall, self.precision, self.fscore, self.complete_match,
                 self.tagging_accuracy)
         else:
-            return "(Recall={:.4f}, Precision={:.4f}, ParseMetrics={:.4f}, CompleteMatch={:.4f})".format(
+            line = "(Recall={:.4f}, Precision={:.4f}, ParseMetrics={:.4f}, CompleteMatch={:.4f})".format(
                 self.recall, self.precision, self.fscore, self.complete_match)
+            if self.gold is not None:
+                line = "{}, GoldCount={}, PredCount={})".format(line[:-1], self.gold_count, self.pred_count)
+            return line
+
 
 
 def report_eval_loss(model, eval_dataloader, device, n_iter, writer) -> np.ndarray:
@@ -178,6 +184,7 @@ def dependency_eval(
     # This can be parallelized!
     predicted_dev_triples, predicted_dev_triples_unlabeled = [], []
     gold_dev_triples, gold_dev_triples_unlabeled = [], []
+    gold_count = pred_count = 0
     c_err = 0
 
     gt_triple_data, pred_triple_data = [], []
@@ -218,6 +225,8 @@ def dependency_eval(
         assert len(gt_triples) == len(
             pred_triples), f"wrong length {len(gt_triples)} vs. {len(pred_triples)}!"
 
+        gold_count += len(gt_triples)
+        pred_count += len(pred_triples)
         for x, y in zip(sorted(gt_triples), sorted(pred_triples)):
             if ignore_punct and is_punctuation(x[3]) and not ud_flag:
                 # ignoring punctuations for evaluation
@@ -234,6 +243,7 @@ def dependency_eval(
         # UD
         predicted_dev_triples, predicted_dev_triples_unlabeled = [], []
         gold_dev_triples, gold_dev_triples_unlabeled = [], []
+        gold_count = pred_count = 0
 
         language, split = eval_dataset.language, eval_dataset.split.split(".")[-1]
 
@@ -254,6 +264,8 @@ def dependency_eval(
         loaded_pred_dev_triples = load_triplets(pred_temp_in)
 
         for gt_triples, pred_triples in zip(loaded_gold_dev_triples, loaded_pred_dev_triples):
+            gold_count += len(gt_triples)
+            pred_count += len(pred_triples)
             for x, y in zip(sorted(gt_triples), sorted(pred_triples)):
                 if ignore_punct and is_punctuation(x[3]):
                     # ignoring punctuations for evaluation
@@ -287,8 +299,8 @@ def dependency_eval(
         fw.write('\n'.join(predicted_dev_triples_unlabeled))"
     """    
 
-    return (ParseMetrics(las_recall, las_precision, las_fscore, complete_match=1),
-            ParseMetrics(uas_recall, uas_precision, uas_fscore, complete_match=1))
+    return (ParseMetrics(las_recall, las_precision, las_fscore, complete_match=1, gold_count=gold_count, pred_count=pred_count),
+            ParseMetrics(uas_recall, uas_precision, uas_fscore, complete_match=1, gold_count=gold_count, pred_count=pred_count))
 
 
 def save_triplets(triplet_data, file_path):
