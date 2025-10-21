@@ -35,7 +35,7 @@ class ParseMetrics(object):
         else:
             line = "(Recall={:.4f}, Precision={:.4f}, ParseMetrics={:.4f}, CompleteMatch={:.4f})".format(
                 self.recall, self.precision, self.fscore, self.complete_match)
-            if self.gold is not None:
+            if self.gold_count is not None:
                 line = "{}, GoldCount={}, PredCount={})".format(line[:-1], self.gold_count, self.pred_count)
             return line
 
