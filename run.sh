@@ -2,7 +2,7 @@
 
 model=$1
 lang=$2
-model_path_name=${model%*/}
+model_path_name=${model#*/}
 for r in 1 2 3 4 ; do
   python run.py vocab --lang ${lang} --tagger hexa
   python run.py train --lang ${lang} --max-depth 6 --tagger hexa --model bert --epochs 50 --batch-size 32 --lr 2e-5 \
