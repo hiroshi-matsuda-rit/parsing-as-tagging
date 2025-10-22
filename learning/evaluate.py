@@ -3,6 +3,7 @@ import math
 import os.path
 import re
 import subprocess
+import sys
 import tempfile
 from copy import deepcopy
 from typing import Tuple
@@ -326,7 +327,7 @@ def deprojectivize(triples_list, language, split, suffix=""):
     temp_dir = os.path.dirname(repo_directory) + "/temp/"
     os.makedirs(temp_dir, exist_ok=True)
     temp_base = tempfile.mktemp(dir=temp_dir)
-    temp_src = f"{language}.{split}{suffix}.{temp_base}"
+    temp_src = f"{temp_base}.{language}-{split}{suffix}"
     temp_dst = temp_src + ".deproj"
     prev_end = 0
     while True:
@@ -341,12 +342,12 @@ def deprojectivize(triples_list, language, split, suffix=""):
         assert len(deproj_list) > prev_end, f"deprojectivize failed after line #{prev_end} in {temp_src}"
         prev_end = len(deproj_list)
         give_up = False
+        print(f"giving up deprojectivization ({temp_src}#{prev_end}): {triples_list[prev_end]}", file=sys.stderr)
         for i, (head, tail, label, pos) in enumerate(triples_list[prev_end]):
             if "|" in label:
-                # giving up deprojectivization
                 triples_list[prev_end][i] = (head, tail, label.split("|")[0], pos)
                 give_up = True
-        assert give_up, triples_list[prev_end]
+        assert give_up
 
 
 def calc_parse_eval(predictions, eval_labels, eval_dataset, tag_system, output_path,
