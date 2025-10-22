@@ -34,7 +34,7 @@ LANG_TO_DIR = {
     "de": "/German@de_gsd-r2.15/de_gsd-ud-{split}.conllu",
     "sl": "/Slovenian@sl_ssj-r2.15/sl_ssj-ud-{split}.conllu",
     "bg": "/Bulgarian@bg_btb-r2.15/bg_btb-ud-{split}.conllu",
-    "ca": "/Croatian@ca_ancora-r2.15/ca_ancora-ud-{split}.conllu",
+    "ca": "/Catalan@ca_ancora-r2.15/ca_ancora-ud-{split}.conllu",
     "es": "/Spanish@es_ancora-r2.15/es_ancora-ud-{split}.conllu",
     "it": "/Italian@it_isdt-r2.15/it_isdt-ud-{split}.conllu",
     "nl": "/Dutch@nl_alpino-r2.15/nl_alpino-ud-{split}.conllu",

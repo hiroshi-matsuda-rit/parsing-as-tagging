@@ -80,7 +80,7 @@ ln -sf /home/sagyou/llmpp/data data/
 python data/dep2bht.py
 
 # ignore logs of bitsandbytes bug report info
-for lang in English Chinese en ja zh ko ar fr de sl bg ca cs es it nl no ro ru zt jb ; do python run.py vocab --lang $lang --tagger hexa ; done
+for lang in en ja zh ko ar fr de sl bg ca cs es it nl no ro ru zt jb ; do python run.py vocab --lang $lang --tagger hexa ; done
 
 CUDA_VISIBLE_DEVICES=0 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path xlnet-large-cased --output-path ./checkpoints.xlnet/ --use-tensorboard False &> log.ptb-xlnet &
 CUDA_VISIBLE_DEVICES=1 python run.py train --lang English --max-depth 6 --tagger hexa --model bert --epochs 50  --batch-size 32 --lr 2e-5 --model-path bert-base-multilingual-cased --output-path ./checkpoints/ --use-tensorboard False &> log.ptb-bert &
