@@ -2,11 +2,12 @@
 
 set -eu
 
-lang=$1
-model=$2
+runs=$1
+lang=$2
+model=$3
 model_path_name=${model#*/}
 # python run.py vocab --lang ${lang} --tagger hexa
-for r in 1 2 3 4 ; do
+for r in `seq ${runs}` ; do
   python run.py train --lang ${lang} --max-depth 6 --tagger hexa --model bert --epochs 50 --batch-size 32 --lr 2e-5 \
     --model-path ${model} \
     --output-path checkpoints/${lang}-${model_path_name}.$r --use-tensorboard False &> log.${lang}-${model_path_name}.$r
