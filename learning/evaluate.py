@@ -247,21 +247,8 @@ def dependency_eval(
 
         language, split = eval_dataset.language, eval_dataset.split.split(".")[-1]
 
-        gold_temp_out, pred_temp_out = tempfile.mktemp(dir=os.path.dirname(repo_directory)), \
-                                       tempfile.mktemp(dir=os.path.dirname(repo_directory))
-        gold_temp_in, pred_temp_in = gold_temp_out + ".deproj", pred_temp_out + ".deproj"
-
-
-        save_triplets(gt_triple_data, gold_temp_out)
-        save_triplets(pred_triple_data, pred_temp_out)
-
-        for filename, tgt_filename in zip([gold_temp_out, pred_temp_out], [gold_temp_in, pred_temp_in]):
-            command = f"cd ../malt/maltparser-1.9.2/; java -jar maltparser-1.9.2.jar -c {language}_{split} -m deproj" \
-                    f" -i {filename} -o {tgt_filename} ; cd -"
-            os.system(command)
-
-        loaded_gold_dev_triples = load_triplets(gold_temp_in)
-        loaded_pred_dev_triples = load_triplets(pred_temp_in)
+        loaded_gold_dev_triples = deprojectivize(gt_triple_data, language, split, ".gold")
+        loaded_pred_dev_triples = deprojectivize(pred_triple_data, language, split, f".pred.{model_name}")
 
         for gt_triples, pred_triples in zip(loaded_gold_dev_triples, loaded_pred_dev_triples):
             gold_count += len(gt_triples)
@@ -333,6 +320,33 @@ def load_triplets(file_path):
         if triplets:
             triplet_data.append(triplets)
     return triplet_data
+
+
+def deprojectivize(triples_list, language, split, suffix=""):
+    temp_dir = os.path.dirname(repo_directory) + "/temp/"
+    os.makedirs(temp_dir, exist_ok=True)
+    temp_base = tempfile.mktemp(dir=temp_dir)
+    temp_src = f"{language}.{split}{suffix}.{temp_base}"
+    temp_dst = temp_src + ".deproj"
+    prev_end = 0
+    while True:
+        save_triplets(triples_list, temp_src)
+        command = f"cd ../malt/maltparser-1.9.2/; java -jar maltparser-1.9.2.jar -c {language}_{split} -m deproj" \
+                f" -i {temp_src} -o {temp_dst} ; cd -"
+        os.system(command)
+        deproj_list = load_triplets(temp_dst)
+        if len(deproj_list) == len(triples_list):
+            return deproj_list
+        # workaround for errors on maltparser deproj
+        assert len(deproj_list) > prev_end, f"deprojectivize failed after line #{prev_end} in {temp_src}"
+        prev_end = len(deproj_list)
+        give_up = False
+        for i, (head, tail, label, pos) in enumerate(triples_list[prev_end]):
+            if "|" in label:
+                # giving up deprojectivization
+                triples_list[prev_end][i] = (head, tail, label.split("|")[0], pos)
+                give_up = True
+        assert give_up, triples_list[prev_end]
 
 
 def calc_parse_eval(predictions, eval_labels, eval_dataset, tag_system, output_path,
@@ -539,21 +553,8 @@ def dependency_decoding(
 
         language, split = eval_dataset.language, eval_dataset.split.split(".")[-1]
 
-        gold_temp_out, pred_temp_out = tempfile.mktemp(dir=os.path.dirname(repo_directory)), \
-                                       tempfile.mktemp(dir=os.path.dirname(repo_directory))
-        gold_temp_in, pred_temp_in = gold_temp_out + ".deproj", pred_temp_out + ".deproj"
-
-
-        save_triplets(gt_triple_data, gold_temp_out)
-        save_triplets(pred_triple_data, pred_temp_out)
-
-        for filename, tgt_filename in zip([gold_temp_out, pred_temp_out], [gold_temp_in, pred_temp_in]):
-            command = f"cd ../malt/maltparser-1.9.2/; java -jar maltparser-1.9.2.jar -c {language}_{split} -m deproj" \
-                    f" -i {filename} -o {tgt_filename} ; cd -"
-            os.system(command)
-
-        loaded_gold_dev_triples = load_triplets(gold_temp_in)
-        loaded_pred_dev_triples = load_triplets(pred_temp_in)
+        loaded_gold_dev_triples = deprojectivize(gt_triple_data, language, split, ".gold")
+        loaded_pred_dev_triples = deprojectivize(pred_triple_data, language, split, f".pred.{model_name}")
 
         for gt_triples, pred_triples in zip(loaded_gold_dev_triples, loaded_pred_dev_triples):
             for x, y in zip(sorted(gt_triples), sorted(pred_triples)):
