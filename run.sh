@@ -5,10 +5,15 @@ set -eu
 runs=$1
 lang=$2
 model=$3
+if [[ $# -ge 4 ]] ; then
+  train_batch_size=$4
+else
+  train_batch_size=32
+fi
 model_path_name=${model#*/}
 # python run.py vocab --lang ${lang} --tagger hexa
 for r in `seq ${runs}` ; do
-  python run.py train --lang ${lang} --max-depth 6 --tagger hexa --model bert --epochs 50 --batch-size 12 --lr 2e-5 \
+  python run.py train --lang ${lang} --max-depth 6 --tagger hexa --model bert --epochs 50 --batch-size ${train_batch_size} --lr 2e-5 \
     --model-path ${model} \
     --output-path checkpoints/${lang}-${model_path_name}.$r --use-tensorboard False &> log.${lang}-${model_path_name}.$r
   python run.py evaluate --lang ${lang} --max-depth 10 --tagger hexa \
