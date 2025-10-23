@@ -13,7 +13,9 @@ def main():
         _ = _.rstrip("\n")
         lines.append(_)
         if _:
-            words.append(_.split("\t")[1])
+            r = _.split("\t")
+            if len(r) == 10:
+                words.append(r[1])
             continue
         text = " ".join(words)
         tokens = tokenizer.enocde(text)
