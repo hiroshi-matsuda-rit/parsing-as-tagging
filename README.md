@@ -103,6 +103,7 @@ for s in train dev test ; do
     sed 's/Ｎｅｗ　Ｙｏｒｋ/ＮｅｗＹｏｒｋ/g' > data/data/hexatagger@ja_bccwj-r2.15/ja_bccwj-ud-$s.conllu
 done
 """
+# And for xlm-roberta-large, to avoid out of context length error, you need to remove some sentence, C034p_OW6X_00044-102 in train set and PB2n_00003-96 in test set.
 
 python data/dep2bht.py
 
