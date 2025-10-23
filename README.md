@@ -73,9 +73,36 @@ ln -sf /home/sagyou/llmpp/data data/
 
 # for ja_bccwj: you need to fix nltk bug by editing line #40 in `venv/lib/python3.10/site-packages/nltk/parse/dependencygraph.py` as `cell_separator="\t",`
 # In addition, you need to remove spaces inside the word. 
-# for s in train dev test ; do
-#   cat data/data/Japanese@ja_bccwj-r2.15/ja_bccwj-ud-$s.conllu | sed 's/は　な　わ/はなわ/g' | sed 's/Ｃｏｏ　Ｄｏｏ’ｓ/ＣｏｏＤｏｏ’ｓ/g' | sed 's/Ｔｏ　ＬＯＶＥる/ＴｏＬＯＶＥる/g' | sed 's/（＿　＿）/(__)/g' | sed 's/（‐　/(‐/g' | sed 's/　‐）/‐)/g' | sed 's/（　/(/g' | sed 's/（/(/g' | sed 's/　）/)/g' | sed 's/）/)/g' > data/data/hexatagger@ja_bccwj-r2.15/ja_bccwj-ud-$s.conllu
-# done
+"""
+for s in train dev test ; do
+  cat data/data/Japanese@ja_bccwj-r2.15/ja_bccwj-ud-$s.conllu | \
+    sed 's/は　な　わ/はなわ/g' | \
+    sed 's/Ｃｏｏ　Ｄｏｏ’ｓ/ＣｏｏＤｏｏ’ｓ/g' | \
+    sed 's/Ｔｏ　ＬＯＶＥる/ＴｏＬＯＶＥる/g' | \
+    sed 's/（＿　＿）/(__)/g' | \
+    sed 's/（‐　/(‐/g' | \
+    sed 's/　‐）/‐)/g' | \
+    sed 's/（　/(/g' | \
+    sed 's/（/(/g' | \
+    sed 's/　）/)/g' | \
+    sed 's/）/)/g' | \
+    sed 's/目　次/目次/g' | \
+    sed 's/宗　派/宗派/g' | \
+    sed 's/本　尊/本尊/g' | \
+    sed 's/開　基/開基/g' | \
+    sed 's/東　京/東京/g' | \
+    sed 's/八　重/八重/g' | \
+    sed 's/馬　単/馬単/g' | \
+    sed 's/京　都/京都/g' | \
+    sed 's/新　潟/新潟/g' | \
+    sed 's/(｀・д´・　；)/(｀・д´・；)/g' | \
+    sed 's/＾　＾/＾＾/g' | \
+    sed 's/ば　ら/ばら/g' | \
+    sed 's/な　かっ/なかっ/g' | \
+    sed 's/(＃ノ＿　＿＿)/(＃ノ＿＿＿)/g' | \
+    sed 's/Ｎｅｗ　Ｙｏｒｋ/ＮｅｗＹｏｒｋ/g' > data/data/hexatagger@ja_bccwj-r2.15/ja_bccwj-ud-$s.conllu
+done
+"""
 
 python data/dep2bht.py
 
