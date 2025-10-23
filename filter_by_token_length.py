@@ -18,7 +18,7 @@ def main():
                 words.append(r[1])
             continue
         text = " ".join(words)
-        tokens = tokenizer.enocde(text)
+        tokens = tokenizer.encode(text)
         if len(tokens) <= max_length:
             print(*lines, sep="\n")
         else:
