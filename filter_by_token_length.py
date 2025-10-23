@@ -9,7 +9,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     lines = []
     words = []
-    for _ in sys.stdin():
+    for _ in sys.stdin:
         _ = _.rstrip("\n")
         lines.append(_)
         if _:
