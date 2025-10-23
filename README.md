@@ -74,7 +74,7 @@ ln -sf /home/sagyou/llmpp/data data/
 # for ja_bccwj: you need to fix nltk bug by editing line #40 in `venv/lib/python3.10/site-packages/nltk/parse/dependencygraph.py` as `cell_separator="\t",`
 # In addition, you need to remove spaces inside the word. 
 # for s in train dev test ; do
-#   cat data/data/Japanese@ja_bccwj-r2.15/ja_bccwj-ud-train.conllu | sed 's/は　な　わ/はなわ/g' | sed 's/Ｃｏｏ　Ｄｏｏ’ｓ/ＣｏｏＤｏｏ’ｓ/g' | sed 's/Ｔｏ　ＬＯＶＥる/ＴｏＬＯＶＥる/g' | sed 's/（＿　＿）/(__)/g' | sed 's/（‐　/(‐/g' | sed 's/　‐）/‐)/g' | sed 's/（　/(/g' | sed 's/（/(/g' | sed 's/　）/)/g' | sed 's/）/)/g' > data/data/hexatagger@ja_bccwj-r2.15/ja_bccwj-ud-$s.conllu
+#   cat data/data/Japanese@ja_bccwj-r2.15/ja_bccwj-ud-$s.conllu | sed 's/は　な　わ/はなわ/g' | sed 's/Ｃｏｏ　Ｄｏｏ’ｓ/ＣｏｏＤｏｏ’ｓ/g' | sed 's/Ｔｏ　ＬＯＶＥる/ＴｏＬＯＶＥる/g' | sed 's/（＿　＿）/(__)/g' | sed 's/（‐　/(‐/g' | sed 's/　‐）/‐)/g' | sed 's/（　/(/g' | sed 's/（/(/g' | sed 's/　）/)/g' | sed 's/）/)/g' > data/data/hexatagger@ja_bccwj-r2.15/ja_bccwj-ud-$s.conllu
 # done
 
 python data/dep2bht.py
