@@ -556,9 +556,11 @@ def evaluate_command(args):
 
     num_leaf_labels, num_tags = calc_num_tags_per_task(tagging_schema, tag_system)
 
+    logging.info("starting prediction")
     predictions, eval_labels = predict(
         model, eval_dataloader, len(eval_dataset),
         num_tags, args.batch_size, device)
+    logging.info("prediction finished")
     calc_tag_accuracy(predictions, eval_labels,
                       num_leaf_labels, writer, args.use_tensorboard)
     if tagging_schema == HEXATAGGER:
